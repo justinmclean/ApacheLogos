@@ -1,5 +1,5 @@
 ### Guess the Apache® Logo
-A simple function poof of concept application to guess which Apache logo belongs to what Apache project.
+A simple function Proof of Concept application to guess the Apache project that goes with the logo presented.
 
 You can find out more about the [Apache Software Foundation][5] and [Apache projects][6].
 
@@ -7,7 +7,8 @@ You can see the application [working][3] on github (via [RawGit][4]).
 
 Code written in [Apache Royale][1] (previously called FlexJS) and Apache logos taken from [Apache website][2].
 
-Some logos may be out of date, some Apache projects missing or some projects may not have exactly the right name (incorrect capitalisation for instance). If your project is missing please add it to the [project.json][7] file and add it's logo to [resources/logos][8] and another logo with the text blurred out to [resources/logos-blur][9].
+SSome Apache projects missing, and/or some projects may not have exactly the right name (incorrect capitalisation for instance). Or a logo may be out of date. 
+If your project is missing please add it to the [project.json][7] file and add it's logo to [resources/logos][8]. Another logo (without showing the name of the Apache Project) must be added to [resources/logos-blur][9].
 
 Apache, the Apache feather logo and all Apache project logos are trademarks of [The Apache Software Foundation][10].
 
