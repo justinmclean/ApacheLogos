@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2017 Justin Mclean
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<js:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:js="library://ns.apache.org/royale/basic"
+                applicationComplete="loadProjects()">
+    
+    <fx:Style>
+        /* centre the logo */
+        #logo {
+            position: absolute;
+            width: auto;
+            height: auto;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+     </fx:Style>
+
+    <fx:Script><![CDATA[
+        import org.apache.royale.net.HTTPService;
+
+        public var load:HTTPService = new HTTPService();
+
+        public var projects:Array = [];
+
+        [Bindable] public var image:String;
+
+        [Bindable] public var project1:String;
+        [Bindable] public var project2:String;
+        [Bindable] public var project3:String;
+        
+        [Bindable] public var score:int;
+        [Bindable] public var total:int;
+        [Bindable] public var noQuestions:int = 5;
+        [Bindable] public var noProjects:int;
+
+        public var blur:Boolean = false;
+
+        public var correct:int;
+        public var answer1:int;
+        public var answer2:int;
+        public var answer3:int;
+
+        public function loadProjects():void {
+            load.url = "projects.json";
+            load.addEventListener("complete", loadedJSON);
+            load.send();
+        }
+
+        public function loadedJSON(event:Event):void {
+            projects = load.json as Array;
+            noProjects = projects.length;
+        }
+
+        public function chooseProject():void {
+            correct = Math.floor(Math.random()*projects.length);
+            var wrong1:int = Math.floor(Math.random()*projects.length);
+            var wrong2:int = Math.floor(Math.random()*projects.length);
+            var pos:int =  Math.floor(Math.random()*3) + 1;
+
+            if (blur) {
+                image = "logos-blur/";
+            }
+            else {
+                image = "logos/";
+            }
+            image += projects[correct][1];
+
+            if (pos == 1) {
+                project1 = projects[correct][0];
+                project2 = projects[wrong1][0];
+                project3 = projects[wrong2][0];
+                answer1 = correct;
+                answer2 = wrong1;
+                answer3 = wrong2;
+            }
+            else if (pos == 2) {
+                project1 = projects[wrong1][0];
+                project2 = projects[correct][0];
+                project3 = projects[wrong2][0];
+                answer1 = wrong1;
+                answer2 = correct;
+                answer3 = wrong2;
+            }
+            else if (pos == 3) {
+                project1 = projects[wrong1][0];
+                project2 = projects[wrong2][0];
+                project3 = projects[correct][0];
+                answer1 = wrong1;
+                answer2 = wrong2;
+                answer3 = correct;
+            }
+            total++;
+        }
+
+        public function checkAnswer(answer:*):void {
+            if (answer == correct) {
+                score++;
+            }
+
+            if (total < noQuestions) {
+                chooseProject();
+            }
+            else {
+                end();
+            }
+        }
+
+        public function reset():void {
+            score = 0;
+            total = 0;
+        }
+
+        public function begin():void {
+            reset();
+            chooseProject();
+            startPage.visible = false;
+            questionPage.visible = true;
+            scorePage.visible = false;
+        }
+
+        public function end():void {
+            startPage.visible = false;
+            questionPage.visible = false;
+            scorePage.visible = true;
+        }
+
+        ]]></fx:Script>
+
+    <js:valuesImpl>
+        <js:SimpleCSSValuesImpl/>
+    </js:valuesImpl>
+
+    <js:beads>
+        <js:ApplicationDataBinding />
+    </js:beads>
+    
+    <js:initialView>
+        <js:View height="100%" width="100%">
+            <js:beads>
+                <js:VerticalLayoutWithPaddingAndGap paddingTop="10" paddingBottom="10" paddingRight="20" paddingLeft="20" />
+            </js:beads>
+            <js:Container id="startPage" visible="true">
+                <js:beads>
+                    <js:VerticalLayoutWithPaddingAndGap gap="20" />
+                </js:beads>
+                <js:style>
+                    <js:SimpleCSSStyles padding="20" />
+                </js:style>
+                <js:Image src="http://apache.org/img/asf_logo.png" height="175" width="429" />
+                <js:Label text="Guess the Apache Project name from it's logo Quiz" />
+                <js:Label text="{noProjects} projects loaded" />
+                <js:Container>
+                    <js:beads>
+                          <js:HorizontalLayout />
+                    </js:beads>
+                    <js:Label text="No of questions to ask:" />
+                    <js:TextInput id="newQuestions" text="{noQuestions}" change="noQuestions = Number(newQuestions.text)" />
+                </js:Container>
+                <js:Container>
+                    <js:beads>
+                          <js:VerticalLayout />
+                    </js:beads>
+                    <js:Label text="Type of logos displayed:" />
+                    <js:RadioButton groupName="logoType" text="Show original logos" selected="true" click="blur = false" />
+                    <js:RadioButton groupName="logoType" text="Show logos with blurred text" click="blur = true"/>
+                </js:Container>
+                <js:TextButton text="Start Quiz" click="begin()" />
+            </js:Container>
+            <js:Container id="questionPage" visible="false">
+                <js:beads>
+                    <js:VerticalLayoutWithPaddingAndGap gap="20" />
+                </js:beads>
+                <js:style>
+                    <js:SimpleCSSStyles padding="20" />
+                </js:style>
+                <js:Label text="Which Apache project has this logo?" />
+                <js:Container width="520" height="300">
+                    <js:style>
+                        <js:SimpleCSSStyles padding="20" />
+                    </js:style>
+                    <js:Image id="logo" src="{image}" />
+                </js:Container>
+                <js:Container width="100%">
+                    <js:beads>
+                        <js:HorizontalLayoutWithPaddingAndGap gap="20" />
+                    </js:beads>
+                    <js:TextButton text="{project1}" click="checkAnswer(answer1)" width="160" />
+                    <js:TextButton text="{project2}" click="checkAnswer(answer2)" width="160" />
+                    <js:TextButton text="{project3}" click="checkAnswer(answer3)" width="160" />
+                 </js:Container>
+            </js:Container>
+            <js:Container id="scorePage" visible="false">
+                <js:beads>
+                    <js:VerticalLayoutWithPaddingAndGap gap="20" />
+                </js:beads>
+                <js:style>
+                    <js:SimpleCSSStyles padding="20" />
+                </js:style>
+                <js:Label text="You scored {score} out of {total}." />
+                <js:TextButton text="Try Again" click="begin()" />
+            </js:Container>
+            <js:Label text="Copyright © 2017 Justin Mclean, Licensed under the Apache License, Version 2.0." />
+            <js:Label text="Apache, the Apache feather logo and all Apache project logos are trademarks of The Apache Software Foundation." />
+        </js:View>
+    </js:initialView>
+
+</js:Application>
