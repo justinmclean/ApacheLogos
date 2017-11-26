@@ -166,21 +166,15 @@ limitations under the License.
                 <js:Image src="http://apache.org/img/asf_logo.png" height="175" width="429" />
                 <js:Label text="Guess the Apache Project name from it's logo Quiz" />
                 <js:Label text="{noProjects} projects loaded" />
-                <js:Container>
-                    <js:beads>
-                          <js:HorizontalLayout />
-                    </js:beads>
+                <js:HContainer>
                     <js:Label text="No of questions to ask:" />
                     <js:TextInput id="newQuestions" text="{noQuestions}" change="noQuestions = Number(newQuestions.text)" />
-                </js:Container>
-                <js:Container>
-                    <js:beads>
-                          <js:VerticalLayout />
-                    </js:beads>
+                </js:HContainer>
+                <js:VContainer>
                     <js:Label text="Type of logos displayed:" />
                     <js:RadioButton groupName="logoType" text="Show original logos" selected="true" click="blur = false" />
                     <js:RadioButton groupName="logoType" text="Show logos with blurred text" click="blur = true"/>
-                </js:Container>
+                </js:VContainer>
                 <js:TextButton text="Start Quiz" click="begin()" />
             </js:Container>
             <js:Container id="questionPage" visible="false">
