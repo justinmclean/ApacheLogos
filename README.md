@@ -1,9 +1,9 @@
 ### Guess the Apache® Logo
-A simple function poof of concept to guess which Apache logo belongs to what what Apache project.
+A simple function poof of concept application to guess which Apache logo belongs to what Apache project.
 
 You can find out more about the [Apache Software Foundation][5] and [Apache projects][6].
 
-You can see the application [working][3] on github (via [rawgit][4]).
+You can see the application [working][3] on github (via [RawGit][4]).
 
 Code written in [Apache Royale][1] (previously called FlexJS) and Apache logos taken from [Apache website][2].
 
