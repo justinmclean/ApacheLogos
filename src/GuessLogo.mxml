@@ -109,12 +109,22 @@ limitations under the License.
             total++;
         }
 
+        public function unfocus():void {
+            // hack to unfocus buttons
+            COMPILE::JS {
+                button1.element.blur();
+                button2.element.blur();
+                button3.element.blur();
+            }
+        }
+
         public function checkAnswer(answer:*):void {
             if (answer == correct) {
                 score++;
             }
 
             if (total < noQuestions) {
+                unfocus();
                 chooseProject();
             }
             else {
@@ -195,9 +205,9 @@ limitations under the License.
                     <js:beads>
                         <js:HorizontalLayoutWithPaddingAndGap gap="20" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" />
                     </js:beads>
-                    <js:TextButton text="{project1}" click="checkAnswer(answer1)" width="160" />
-                    <js:TextButton text="{project2}" click="checkAnswer(answer2)" width="160" />
-                    <js:TextButton text="{project3}" click="checkAnswer(answer3)" width="160" />
+                    <js:TextButton id="button1" text="{project1}" click="checkAnswer(answer1)" width="160" />
+                    <js:TextButton id="button2" text="{project2}" click="checkAnswer(answer2)" width="160" />
+                    <js:TextButton id="button3" text="{project3}" click="checkAnswer(answer3)" width="160" />
                  </js:Container>
             </js:Container>
             <js:Container id="scorePage" visible="false">
