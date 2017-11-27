@@ -164,7 +164,7 @@ limitations under the License.
                     <js:SimpleCSSStyles padding="20" />
                 </js:style>
                 <js:Image src="http://apache.org/img/asf_logo.png" height="175" width="429" />
-                <js:Label text="Guess the Apache Project name from it's logo Quiz" />
+                <js:Label text="Guess the Apache® project's name from its logo quiz" />
                 <js:Label text="{noProjects} projects loaded" />
                 <js:HContainer>
                     <js:Label text="No of questions to ask:" />
