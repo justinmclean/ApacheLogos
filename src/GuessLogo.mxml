@@ -20,7 +20,7 @@ limitations under the License.
     
     <fx:Style>
         /* centre the logo */
-        #logo {
+        #logo, #correctLogo {
             position: absolute;
             width: auto;
             height: auto;
@@ -33,9 +33,12 @@ limitations under the License.
      </fx:Style>
 
     <fx:Script><![CDATA[
+        import org.apache.royale.events.Event;
+        import org.apache.royale.net.HTTPConstants;
         import org.apache.royale.net.HTTPService;
 
         public var load:HTTPService = new HTTPService();
+        public var projectInfo:HTTPService = new HTTPService();
 
         public var projects:Array = [];
 
@@ -49,6 +52,11 @@ limitations under the License.
         [Bindable] public var total:int;
         [Bindable] public var noQuestions:int = 5;
         [Bindable] public var noProjects:int;
+
+        [Bindable] public var project:String = "";
+        [Bindable] public var right:Boolean = false;
+        [Bindable] public var description:String = "";
+        [Bindable] public var link:String = "";
 
         public var blur:Boolean = false;
 
@@ -81,31 +89,41 @@ limitations under the License.
                 image = "logos/";
             }
             image += projects[correct][1];
+            correctLogo.src =  "logos/" + projects[correct][1];
+            description = "";
+            link = "";
 
             if (pos == 1) {
                 project1 = projects[correct][0];
                 project2 = projects[wrong1][0];
                 project3 = projects[wrong2][0];
+                project = project1;
                 answer1 = correct;
                 answer2 = wrong1;
                 answer3 = wrong2;
+                getInfo(project1.replace("Apache ", "").toLowerCase());
             }
             else if (pos == 2) {
                 project1 = projects[wrong1][0];
                 project2 = projects[correct][0];
                 project3 = projects[wrong2][0];
+                project = project2;
                 answer1 = wrong1;
                 answer2 = correct;
                 answer3 = wrong2;
+                getInfo(project2.replace("Apache ", "").toLowerCase());
             }
             else if (pos == 3) {
                 project1 = projects[wrong1][0];
                 project2 = projects[wrong2][0];
                 project3 = projects[correct][0];
+                project = project3;
                 answer1 = wrong1;
                 answer2 = wrong2;
                 answer3 = correct;
+                getInfo(project3.replace("Apache ", "").toLowerCase());
             }
+
             total++;
         }
 
@@ -118,17 +136,26 @@ limitations under the License.
             }
         }
 
-        public function checkAnswer(answer:*):void {
+        public function checkAnswer(answer:*):Boolean {
+            var right:Boolean = false;
+
             if (answer == correct) {
+                right = true;
                 score++;
             }
 
-            if (total < noQuestions) {
-                unfocus();
-                chooseProject();
+            unfocus();
+            result();
+
+            return right;
+        }
+
+        public function endQuiz():void {
+            if (total >= noQuestions) {
+                  end();
             }
             else {
-                end();
+                question();
             }
         }
 
@@ -139,16 +166,49 @@ limitations under the License.
 
         public function begin():void {
             reset();
+            question();
+        }
+
+        public function question():void {
             chooseProject();
             startPage.visible = false;
             questionPage.visible = true;
+            resultPage.visible = false;
+            scorePage.visible = false;
+        }
+
+        public function result():void {
+            startPage.visible = false;
+            questionPage.visible = false;
+            resultPage.visible = true;
             scorePage.visible = false;
         }
 
         public function end():void {
             startPage.visible = false;
             questionPage.visible = false;
+            resultPage.visible = false;
             scorePage.visible = true;
+        }
+
+        public function getInfo(project:String):void {
+            projectInfo = new HTTPService();
+            projectInfo.url = "https://projects.apache.org/json/projects/" + project + ".json";
+            projectInfo.method = HTTPConstants.POST;
+            projectInfo.addEventListener(Event.COMPLETE, gotInfo);
+            projectInfo.send();
+        }
+
+        public function gotInfo(event:Event):void {
+            var project:Object = JSON.parse(projectInfo.data);
+            var status:int = projectInfo.status;
+
+            if (status == 200) {
+                description = project.shortdesc;
+                link = '<a href="' + project.homepage + '"\>' + project.homepage + '</a>';
+            }
+            projectInfo.removeEventListener(Event.COMPLETE, gotInfo);
+            projectInfo = null;
         }
 
         ]]></fx:Script>
@@ -205,10 +265,32 @@ limitations under the License.
                     <js:beads>
                         <js:HorizontalLayoutWithPaddingAndGap gap="20" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" />
                     </js:beads>
-                    <js:TextButton id="button1" text="{project1}" click="checkAnswer(answer1)" width="160" />
-                    <js:TextButton id="button2" text="{project2}" click="checkAnswer(answer2)" width="160" />
-                    <js:TextButton id="button3" text="{project3}" click="checkAnswer(answer3)" width="160" />
+                    <js:TextButton id="button1" text="{project1}" click="right = checkAnswer(answer1)" width="160" />
+                    <js:TextButton id="button2" text="{project2}" click="right = checkAnswer(answer2)" width="160" />
+                    <js:TextButton id="button3" text="{project3}" click="right = checkAnswer(answer3)" width="160" />
                  </js:Container>
+            </js:Container>
+            <js:Container id="resultPage" visible="false">
+                <js:beads>
+                    <js:VerticalLayoutWithPaddingAndGap gap="20" />
+                </js:beads>
+                <js:style>
+                    <js:SimpleCSSStyles padding="20" />
+                </js:style>
+                <js:Label text="You got it right" visible="{right}" />
+                <js:Label text="Sorry that's not right" visible="{!right}"/>
+                <js:Container width="520" height="300">
+                    <js:style>
+                        <js:SimpleCSSStyles padding="20" />
+                    </js:style>
+                    <js:Image id="correctLogo" />
+                </js:Container>
+                <js:VContainer>
+                    <js:Label text="{project}" />
+                    <js:MultilineLabel text="{description}" width="500" />
+                    <js:Label html="{link}" />
+                </js:VContainer>
+                <js:TextButton text="Next Question" click="endQuiz()" />
             </js:Container>
             <js:Container id="scorePage" visible="false">
                 <js:beads>
