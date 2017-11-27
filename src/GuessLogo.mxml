@@ -58,7 +58,7 @@ limitations under the License.
         [Bindable] public var description:String = "";
         [Bindable] public var link:String = "";
 
-        public var blur:Boolean = false;
+        public var blur:Boolean = true;
 
         public var correct:int;
         public var answer1:int;
@@ -242,8 +242,8 @@ limitations under the License.
                 </js:HContainer>
                 <js:VContainer>
                     <js:Label text="Type of logos displayed:" />
-                    <js:RadioButton groupName="logoType" text="Show original logos" selected="true" click="blur = false" />
-                    <js:RadioButton groupName="logoType" text="Show logos with blurred text" click="blur = true"/>
+                    <js:RadioButton groupName="logoType" text="Show original logos"  click="blur = false" />
+                    <js:RadioButton groupName="logoType" text="Show logos with blurred text" selected="true" click="blur = true"/>
                 </js:VContainer>
                 <js:TextButton text="Start Quiz" click="begin()" />
             </js:Container>
