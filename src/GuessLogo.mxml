@@ -19,7 +19,7 @@ limitations under the License.
                 applicationComplete="loadProjects()">
     
     <fx:Style>
-        /* centre the logo */
+        /* centre the logos */
         #logo, #correctLogo {
             position: absolute;
             width: auto;
