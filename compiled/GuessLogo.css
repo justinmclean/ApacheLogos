@@ -93,9 +93,18 @@ Button:active {
     }
 
 
+.HContainer {
+                white-space: nowrap;
+}
+
+
 .Image {
             vertical-align: top;
     }
+
+
+.VContainer {
+        }
 
 
 .Panel .TitleBar {
@@ -182,6 +191,18 @@ Button:active {
 
 
 #logo {
+        position: absolute;
+        height: auto;
+        width: auto;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        right: 0;
+        top: 0;
+}
+
+
+#correctLogo {
         position: absolute;
         height: auto;
         width: auto;
