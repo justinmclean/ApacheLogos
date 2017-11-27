@@ -193,7 +193,7 @@ limitations under the License.
                 </js:Container>
                 <js:Container width="100%">
                     <js:beads>
-                        <js:HorizontalLayoutWithPaddingAndGap gap="20" />
+                        <js:HorizontalLayoutWithPaddingAndGap gap="20" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" />
                     </js:beads>
                     <js:TextButton text="{project1}" click="checkAnswer(answer1)" width="160" />
                     <js:TextButton text="{project2}" click="checkAnswer(answer2)" width="160" />
