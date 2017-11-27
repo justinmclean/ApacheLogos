@@ -204,8 +204,8 @@ limitations under the License.
             var status:int = projectInfo.status;
 
             if (status == 200) {
-                description = project.shortdesc;
-                link = '<a href="' + project.homepage + '"\>' + project.homepage + '</a>';
+                description = project["shortdesc"];
+                link = '<a href="' + project["homepage"] + '"\>' + project["homepage"] + '</a>';
             }
             projectInfo.removeEventListener(Event.COMPLETE, gotInfo);
             projectInfo = null;
