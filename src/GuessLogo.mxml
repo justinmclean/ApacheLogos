@@ -165,8 +165,17 @@ limitations under the License.
         }
 
         public function begin():void {
-            reset();
-            question();
+            if (noQuestions > 0) {
+                reset();
+                question();
+            }
+        }
+
+        public function settings():void {
+            startPage.visible = true;
+            questionPage.visible = false;
+            resultPage.visible = false;
+            scorePage.visible = false;
         }
 
         public function question():void {
@@ -300,7 +309,7 @@ limitations under the License.
                     <js:SimpleCSSStyles padding="20" />
                 </js:style>
                 <js:Label text="You scored {score} out of {total}." />
-                <js:TextButton text="Try Again" click="begin()" />
+                <js:TextButton text="Try Again" click="settings()" />
             </js:Container>
             <js:Label text="Copyright © 2017 Justin Mclean, Licensed under the Apache License, Version 2.0." />
             <js:Label text="Apache, the Apache feather logo and all Apache project logos are trademarks of The Apache Software Foundation." />
